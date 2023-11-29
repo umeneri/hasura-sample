@@ -1,0 +1,13 @@
+actions:
+  - name: actionName
+    definition:
+      kind: synchronous
+      handler: https://learnmemo/hasura
+    comment: hoge
+custom_types:
+  enums: []
+  input_objects:
+    - name: SampleInput
+  objects:
+    - name: SampleOutput
+  scalars: []
