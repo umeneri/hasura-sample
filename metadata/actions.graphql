@@ -4,12 +4,20 @@ type Mutation {
   ): SampleOutput
 }
 
+type Query {
+  hoge: SampleOutput2
+}
+
 input SampleInput {
   username: String!
   password: String!
 }
 
 type SampleOutput {
+  accessToken: String!
+}
+
+type SampleOutput2 {
   accessToken: String!
 }
 

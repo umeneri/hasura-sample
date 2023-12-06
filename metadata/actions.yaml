@@ -4,10 +4,16 @@ actions:
       kind: synchronous
       handler: https://learnmemo/hasura
     comment: hoge
+  - name: hoge
+    definition:
+      kind: ""
+      handler: https://learnmemo/hasura
+    comment: hoge3
 custom_types:
   enums: []
   input_objects:
     - name: SampleInput
   objects:
     - name: SampleOutput
+    - name: SampleOutput2
   scalars: []
