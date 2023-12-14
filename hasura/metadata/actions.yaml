@@ -110,6 +110,21 @@ actions:
           template: '{{$body}}'
         template_engine: Kriti
         version: 2
+  - name: queryTest
+    definition:
+      kind: ""
+      handler: http://web:9000
+      forward_client_headers: true
+      request_transform:
+        method: GET
+        query_params: {}
+        request_headers:
+          add_headers: {}
+          remove_headers:
+            - content-type
+        template_engine: Kriti
+        version: 2
+    comment: queryTest
 custom_types:
   enums:
     - name: EventType
@@ -361,4 +376,5 @@ custom_types:
     - name: ListSkuEntry
     - name: Sku2
     - name: SkuVersion
+    - name: QueryTestResponse
   scalars: []

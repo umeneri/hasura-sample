@@ -38,6 +38,10 @@ type Mutation {
   ): String
 }
 
+type Query {
+  queryTest: QueryTestResponse!
+}
+
 enum EventType {
   unknown
   requestDocument
@@ -336,5 +340,9 @@ type SkuVersion {
   wholesaleRequired: Boolean!
   wholesaleScheduledSalesDate: String
   wholesaleSwitchMethod: WholesaleSwitchMethod
+}
+
+type QueryTestResponse {
+  name: String!
 }
 
