@@ -1,0 +1,340 @@
+type Mutation {
+  actionName(
+    arg1: SampleInput!
+  ): SampleOutput
+}
+
+type Mutation {
+  deleteSku(
+    skuId: ID!
+  ): String
+}
+
+type Query {
+  getDocument(
+    documentId: ID!
+  ): Document2
+}
+
+type Query {
+  getHealth: String
+}
+
+type Query {
+  getSku: [ListSkuEntry]
+}
+
+type Mutation {
+  putDocument(
+    document3Input: Document3Input
+    documentId: ID!
+  ): String
+}
+
+type Mutation {
+  putSku(
+    sku2Input: Sku2Input
+    skuId: ID!
+  ): String
+}
+
+enum EventType {
+  unknown
+  requestDocument
+  save
+  confirmationSave
+  confirmationCancel
+  accept
+  finalAccept
+  changeStatusBeforeSubmit
+  changeStatusSubmit
+  changeStatusProofread
+  changeStatusApprove
+}
+
+enum NewStatus {
+  none
+  preDraft
+  preDraftConfirmed
+  draft
+  official
+  officialConfirmed
+  officialPreSubmission
+  officialSubmitted
+  officialProofread
+  officialApproved
+}
+
+enum OldStatus {
+  none
+  preDraft
+  preDraftConfirmed
+  draft
+  official
+  officialConfirmed
+  officialPreSubmission
+  officialSubmitted
+  officialProofread
+  officialApproved
+}
+
+enum Role2 {
+  none
+  admin
+  po
+  poSupport
+  marketing
+  creative
+  finalConfirmation
+}
+
+enum Unit {
+  kiloCalorie
+  gram
+  milliGram
+  microGram
+}
+
+enum DocumentStatus {
+  none
+  preDraft
+  preDraftConfirmed
+  draft
+  official
+  officialConfirmed
+  officialPreSubmission
+  officialSubmitted
+  officialProofread
+  officialApproved
+}
+
+enum EcSwitchMethod {
+  none
+  synchronous
+  natural
+}
+
+enum Role {
+  po
+  poSupport
+  marketing
+  creative
+  finalConfirmation
+}
+
+enum SalesStatus {
+  none
+  planning
+  preparation
+  released
+  soldOut
+}
+
+enum WholesaleSwitchMethod {
+  none
+  synchronous
+  natural
+}
+
+input SampleInput {
+  users: [User2]!
+}
+
+input Sku2Input {
+  displayOrder: Int!
+  name: String!
+  note1: String!
+  note2: String!
+  requiredCookingFigures: Boolean!
+  skuId: ID!
+}
+
+input Document3Input {
+  conversionFactor: Float!
+  currentVersion: Int!
+  documentItems: [DocumentDocumentItemInput]!
+  graphNutrients: [DocumentGraphNutrientInput]!
+  isConfirmation: Boolean!
+  packageNutrients: [DocumentPackageNutrientInput]!
+  skuVersionId: ID!
+  summary: String!
+}
+
+input DocumentDocumentItemInput {
+  description: String!
+  displayName: String!
+  displayOrder: Int!
+  documentItemId: ID!
+  locationKindId: ID!
+  name: String!
+  note: String!
+  nutrientId: ID
+}
+
+input DocumentGraphNutrientInput {
+  in12ItemGraph: Boolean!
+  in33ItemGraph: Boolean!
+  in5ItemGraph: Boolean!
+  name: String!
+  nutrientId: ID!
+  threeMealAchievementRateAfter: Float!
+  threeMealAchievementRateBefore: Float!
+}
+
+input DocumentPackageNutrientInput {
+  achievementRate: Float
+  amount: Float!
+  companyDigitCount: Int!
+  displayName: String!
+  legalDigitCount: Int!
+  name: String!
+  nutrientId: ID!
+  threeMealAchievementRate: Float
+  unit: Unit!
+}
+
+input User2 {
+  name: String!
+}
+
+type SampleOutput {
+  accessToken: String!
+}
+
+type SampleOutput2 {
+  accessToken: String!
+}
+
+type SkuVersions {
+  version: String
+}
+
+type Sku {
+  name: String
+}
+
+type Document {
+  conversionFactor: Float!
+  documentId: ID!
+  documentItems: [DocumentDocumentItem]!
+  graphNutrients: [DocumentGraphNutrient]!
+  packageNutrients: [DocumentPackageNutrient]!
+  skuVersionId: ID!
+  summary: String!
+  version: Int!
+}
+
+type Document2 {
+  document: Document!
+  draftConfirmationSaved: DocumentEvent
+  officialAccepted: DocumentEvent
+  officialConfirmationSaved: DocumentEvent
+  preDraftAccepted: DocumentEvent
+  preDraftConfirmationSaved: DocumentEvent
+}
+
+type DocumentDocumentItem {
+  description: String!
+  displayName: String!
+  displayOrder: Int!
+  documentItemId: ID!
+  locationKindId: ID!
+  name: String!
+  note: String!
+  nutrientId: ID
+}
+
+type DocumentEvent {
+  author: User!
+  createdAt: String!
+  documentEventId: ID!
+  eventType: EventType!
+  newStatus: NewStatus!
+  oldStatus: OldStatus!
+  skuVersionId: ID!
+}
+
+type DocumentGraphNutrient {
+  in12ItemGraph: Boolean!
+  in33ItemGraph: Boolean!
+  in5ItemGraph: Boolean!
+  name: String!
+  nutrientId: ID!
+  threeMealAchievementRateAfter: Float!
+  threeMealAchievementRateBefore: Float!
+}
+
+type DocumentPackageNutrient {
+  achievementRate: Float
+  amount: Float!
+  companyDigitCount: Int!
+  displayName: String!
+  legalDigitCount: Int!
+  name: String!
+  nutrientId: ID!
+  threeMealAchievementRate: Float
+  unit: Unit!
+}
+
+type User {
+  email: String!
+  name: String!
+  notificationEnabled: Boolean!
+  role: Role2!
+  slackUserId: String!
+  userId: String!
+}
+
+type Assignee {
+  isMain: Boolean!
+  role: Role!
+  userId: String!
+}
+
+type FactoryAllocation {
+  factoryId: ID!
+  isEc: Boolean!
+  isWholesale: Boolean!
+  productionStartsAt: String
+}
+
+type ListSkuEntry {
+  assignee: User
+  sku: Sku2!
+  skuVersion: SkuVersion
+}
+
+type Sku2 {
+  displayOrder: Int!
+  name: String!
+  note1: String!
+  note2: String!
+  requiredCookingFigures: Boolean!
+  skuId: ID!
+}
+
+type SkuVersion {
+  assignees: [Assignee]!
+  documentChanged: Boolean!
+  documentStatus: DocumentStatus!
+  ecRequired: Boolean!
+  ecScheduledSalesDate: String
+  ecSwitchMethod: EcSwitchMethod
+  factoryAllocations: [FactoryAllocation]!
+  historyVersion: Int!
+  judgeSheetLink: String!
+  majorVersion: Int!
+  materialChanged: Boolean!
+  minorVersion: Int!
+  note: String!
+  patchVersion: Int!
+  salesStatus: SalesStatus!
+  shapeChanged: Boolean!
+  skuId: ID!
+  skuVersionId: ID!
+  summary: String!
+  wholesaleRequired: Boolean!
+  wholesaleScheduledSalesDate: String
+  wholesaleSwitchMethod: WholesaleSwitchMethod
+}
+

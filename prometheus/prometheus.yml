@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 15s # デフォルトのスクレイプ間隔
+
+scrape_configs:
+  - job_name: 'hasura'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['hasura-metric-adapter:8082']
+

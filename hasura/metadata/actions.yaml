@@ -1,0 +1,364 @@
+actions:
+  - name: actionName
+    definition:
+      kind: synchronous
+      handler: http://web:9000
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input.arg1}}'
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: user
+    comment: hoge
+  - name: deleteSku
+    definition:
+      kind: synchronous
+      handler: http://localhost:8000
+      forward_client_headers: true
+      request_transform:
+        method: DELETE
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/sku/{{$body.input.skuId}}'
+        version: 2
+      response_transform:
+        body:
+          action: transform
+          template: '{{$body}}'
+        template_engine: Kriti
+        version: 2
+  - name: getDocument
+    definition:
+      kind: ""
+      handler: http://localhost:8000
+      forward_client_headers: true
+      request_transform:
+        method: GET
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/documents/{{$body.input.documentId}}'
+        version: 2
+    permissions:
+      - role: user
+  - name: getHealth
+    definition:
+      kind: ""
+      handler: http://localhost:8000
+      forward_client_headers: true
+      request_transform:
+        method: GET
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/health'
+        version: 2
+      response_transform:
+        body:
+          action: transform
+          template: '{{$body}}'
+        template_engine: Kriti
+        version: 2
+  - name: getSku
+    definition:
+      kind: ""
+      handler: http://localhost:8000
+      forward_client_headers: true
+      request_transform:
+        method: GET
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/sku'
+        version: 2
+  - name: putDocument
+    definition:
+      kind: synchronous
+      handler: http://localhost:8000
+      forward_client_headers: true
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input.document3Input}}'
+        method: PUT
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/documents/{{$body.input.documentId}}'
+        version: 2
+      response_transform:
+        body:
+          action: transform
+          template: '{{$body}}'
+        template_engine: Kriti
+        version: 2
+  - name: putSku
+    definition:
+      kind: synchronous
+      handler: http://localhost:8000
+      forward_client_headers: true
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input.sku2Input}}'
+        method: PUT
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/sku/{{$body.input.skuId}}'
+        version: 2
+      response_transform:
+        body:
+          action: transform
+          template: '{{$body}}'
+        template_engine: Kriti
+        version: 2
+custom_types:
+  enums:
+    - name: EventType
+      values:
+        - description: null
+          is_deprecated: null
+          value: unknown
+        - description: null
+          is_deprecated: null
+          value: requestDocument
+        - description: null
+          is_deprecated: null
+          value: save
+        - description: null
+          is_deprecated: null
+          value: confirmationSave
+        - description: null
+          is_deprecated: null
+          value: confirmationCancel
+        - description: null
+          is_deprecated: null
+          value: accept
+        - description: null
+          is_deprecated: null
+          value: finalAccept
+        - description: null
+          is_deprecated: null
+          value: changeStatusBeforeSubmit
+        - description: null
+          is_deprecated: null
+          value: changeStatusSubmit
+        - description: null
+          is_deprecated: null
+          value: changeStatusProofread
+        - description: null
+          is_deprecated: null
+          value: changeStatusApprove
+    - name: NewStatus
+      values:
+        - description: null
+          is_deprecated: null
+          value: none
+        - description: null
+          is_deprecated: null
+          value: preDraft
+        - description: null
+          is_deprecated: null
+          value: preDraftConfirmed
+        - description: null
+          is_deprecated: null
+          value: draft
+        - description: null
+          is_deprecated: null
+          value: official
+        - description: null
+          is_deprecated: null
+          value: officialConfirmed
+        - description: null
+          is_deprecated: null
+          value: officialPreSubmission
+        - description: null
+          is_deprecated: null
+          value: officialSubmitted
+        - description: null
+          is_deprecated: null
+          value: officialProofread
+        - description: null
+          is_deprecated: null
+          value: officialApproved
+    - name: OldStatus
+      values:
+        - description: null
+          is_deprecated: null
+          value: none
+        - description: null
+          is_deprecated: null
+          value: preDraft
+        - description: null
+          is_deprecated: null
+          value: preDraftConfirmed
+        - description: null
+          is_deprecated: null
+          value: draft
+        - description: null
+          is_deprecated: null
+          value: official
+        - description: null
+          is_deprecated: null
+          value: officialConfirmed
+        - description: null
+          is_deprecated: null
+          value: officialPreSubmission
+        - description: null
+          is_deprecated: null
+          value: officialSubmitted
+        - description: null
+          is_deprecated: null
+          value: officialProofread
+        - description: null
+          is_deprecated: null
+          value: officialApproved
+    - name: Role2
+      values:
+        - description: null
+          is_deprecated: null
+          value: none
+        - description: null
+          is_deprecated: null
+          value: admin
+        - description: null
+          is_deprecated: null
+          value: po
+        - description: null
+          is_deprecated: null
+          value: poSupport
+        - description: null
+          is_deprecated: null
+          value: marketing
+        - description: null
+          is_deprecated: null
+          value: creative
+        - description: null
+          is_deprecated: null
+          value: finalConfirmation
+    - name: Unit
+      values:
+        - description: null
+          is_deprecated: null
+          value: kiloCalorie
+        - description: null
+          is_deprecated: null
+          value: gram
+        - description: null
+          is_deprecated: null
+          value: milliGram
+        - description: null
+          is_deprecated: null
+          value: microGram
+    - name: DocumentStatus
+      values:
+        - description: null
+          is_deprecated: null
+          value: none
+        - description: null
+          is_deprecated: null
+          value: preDraft
+        - description: null
+          is_deprecated: null
+          value: preDraftConfirmed
+        - description: null
+          is_deprecated: null
+          value: draft
+        - description: null
+          is_deprecated: null
+          value: official
+        - description: null
+          is_deprecated: null
+          value: officialConfirmed
+        - description: null
+          is_deprecated: null
+          value: officialPreSubmission
+        - description: null
+          is_deprecated: null
+          value: officialSubmitted
+        - description: null
+          is_deprecated: null
+          value: officialProofread
+        - description: null
+          is_deprecated: null
+          value: officialApproved
+    - name: EcSwitchMethod
+      values:
+        - description: null
+          is_deprecated: null
+          value: none
+        - description: null
+          is_deprecated: null
+          value: synchronous
+        - description: null
+          is_deprecated: null
+          value: natural
+    - name: Role
+      values:
+        - description: null
+          is_deprecated: null
+          value: po
+        - description: null
+          is_deprecated: null
+          value: poSupport
+        - description: null
+          is_deprecated: null
+          value: marketing
+        - description: null
+          is_deprecated: null
+          value: creative
+        - description: null
+          is_deprecated: null
+          value: finalConfirmation
+    - name: SalesStatus
+      values:
+        - description: null
+          is_deprecated: null
+          value: none
+        - description: null
+          is_deprecated: null
+          value: planning
+        - description: null
+          is_deprecated: null
+          value: preparation
+        - description: null
+          is_deprecated: null
+          value: released
+        - description: null
+          is_deprecated: null
+          value: soldOut
+    - name: WholesaleSwitchMethod
+      values:
+        - description: null
+          is_deprecated: null
+          value: none
+        - description: null
+          is_deprecated: null
+          value: synchronous
+        - description: null
+          is_deprecated: null
+          value: natural
+  input_objects:
+    - name: SampleInput
+    - name: Sku2Input
+    - name: Document3Input
+    - name: DocumentDocumentItemInput
+    - name: DocumentGraphNutrientInput
+    - name: DocumentPackageNutrientInput
+    - name: User2
+  objects:
+    - name: SampleOutput
+    - name: SampleOutput2
+    - name: SkuVersions
+    - name: Sku
+    - name: Document
+    - name: Document2
+    - name: DocumentDocumentItem
+    - name: DocumentEvent
+    - name: DocumentGraphNutrient
+    - name: DocumentPackageNutrient
+    - name: User
+    - name: Assignee
+    - name: FactoryAllocation
+    - name: ListSkuEntry
+    - name: Sku2
+    - name: SkuVersion
+  scalars: []

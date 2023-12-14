@@ -9,11 +9,15 @@ services:
       - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: postgrespassword
+
   graphql-engine:
     image: hasura/graphql-engine:v2.35.0
+    command: sh -c 'rm -rf /tmp/log/stdout.log && mkfifo /tmp/log/stdout.log && /bin/graphql-engine serve | tee /tmp/log/stdout.log'
     ports:
       - "8080:8080"
     restart: always
+    volumes:
+      - logs:/tmp/log
     environment:
       ## postgres database to store Hasura metadata
       HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
@@ -27,26 +31,72 @@ services:
       ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
       # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
       ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
-    depends_on:
-      data-connector-agent:
-        condition: service_healthy
-  data-connector-agent:
-    image: hasura/graphql-data-connector:v2.35.0
-    restart: always
+    # depends_on:
+    #   data-connector-agent:
+    #     condition: service_healthy
+
+  hasura-metric-adapter:
+    image: ghcr.io/afitzek/hasura-metric-adapter:v0.2.1
     ports:
-      - 8081:8081
+      - "8082:8082"
+    volumes:
+      - logs:/tmp/log
+    depends_on:
+      graphql-engine:
+        condition: service_healthy
     environment:
-      QUARKUS_LOG_LEVEL: ERROR # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
-      ## https://quarkus.io/guides/opentelemetry#configuration-reference
-      QUARKUS_OPENTELEMETRY_ENABLED: "false"
-      ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/athena/health"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-      start_period: 5s
+      LISTEN_ADDR: 0.0.0.0:8082
+      LOG_FILE: /tmp/log/stdout.log
+      HASURA_GRAPHQL_ENDPOINT: http://localhost:8080
+      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      RUST_BACKTRACE: 1
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  # data-connector-agent:
+  #   image: hasura/graphql-data-connector:v2.35.0
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     QUARKUS_LOG_LEVEL: FATAL # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
+  #     ## https://quarkus.io/guides/opentelemetry#configuration-reference
+  #     QUARKUS_OPENTELEMETRY_ENABLED: "false"
+  #     ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/athena/health"]
+  #     interval: 5s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 5s
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/nodejs/Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./nodejs:/usr/src/app
+      - /usr/src/app/node_modules
+
+  graphql-server:
+    build:
+      context: .
+      dockerfile: ./docker/graphql-server/Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./graphql-server:/usr/src/app
+      - /usr/src/app/node_modules
+
 volumes:
   db_data:
+  logs:

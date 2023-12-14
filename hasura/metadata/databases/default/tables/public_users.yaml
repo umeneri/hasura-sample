@@ -1,0 +1,53 @@
+table:
+  name: users
+  schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - created_at
+        - id
+        - name
+      filter: {}
+      limit: 1
+    comment: ""
+event_triggers:
+  - name: test
+    definition:
+      delete:
+        columns: '*'
+      enable_manual: false
+      insert:
+        columns: '*'
+      update:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: http://web:9000
+  - name: trigger1
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+      update:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: http://web:9000
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "table": {
+              "name": {{$body.table.name}},
+              "schema": {{$body.table.schema}}
+            }
+          }
+      query_params: {}
+      template_engine: Kriti
+      version: 2

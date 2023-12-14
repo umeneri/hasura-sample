@@ -1,0 +1,7 @@
+.git
+.gitignore
+*.md
+graphql-server/dist
+graphql-server/node_modules
+nodejs/dist
+nodejs/node_modules
